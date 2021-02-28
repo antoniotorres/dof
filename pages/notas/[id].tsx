@@ -2,6 +2,7 @@ import React from "react";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
+import { getFiles } from "../../lib/aws";
 import { getNote } from "../../lib/getNote";
 
 interface Props {
@@ -20,7 +21,22 @@ export default function Page({ post }: Props) {
   );
 }
 
-export async function getServerSideProps({ params: { id } }) {
+// This function gets called at build time
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+  const files = await getFiles();
+
+  // // Get the paths we want to pre-render based on posts
+  const paths = files.map((file) => ({
+    params: { id: file.Key.replace(".php", "") },
+  }));
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: true };
+}
+
+export async function getStaticProps({ params: { id } }) {
   try {
     const post = await getNote(id);
     return {

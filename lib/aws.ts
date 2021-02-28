@@ -8,6 +8,29 @@ const s3 = new AWS.S3({
 });
 
 /**
+ * Function to list objects inside bucket
+ */
+async function listObjectsBucket() {
+  return new Promise<AWS.S3.ListObjectsOutput>((resolve, reject) => {
+    const params = {
+      Bucket: process.env.SERVER_AWS_BUCKET,
+    };
+    s3.listObjects(params, (s3Err, data) => {
+      if (s3Err) reject(s3Err);
+      resolve(data);
+    });
+  });
+}
+
+/**
+ * Function to get the files inside the bucket
+ */
+export async function getFiles() {
+  const list = await listObjectsBucket();
+  return list.Contents;
+}
+
+/**
  * Function to store data into S3 bucket. AWS configs and bucket will
  * be loaded from env variables
  * @param filename Name or key of the file to store in S3 bucket
