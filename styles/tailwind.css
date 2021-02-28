@@ -1,0 +1,43 @@
+@import "tailwindcss/base";
+
+h1 {
+  @apply text-3xl;
+  @apply pt-4;
+  @apply pb-4;
+}
+h2 {
+  @apply text-2xl;
+  @apply pt-4;
+  @apply pb-2;
+}
+h3 {
+  @apply text-xl;
+  @apply pt-4;
+  @apply pb-1;
+}
+
+p {
+  @apply py-1;
+}
+
+a {
+  @apply text-blue-600 underline;
+}
+
+ul {
+  @apply list-disc;
+  @apply list-inside;
+}
+
+li {
+  @apply py-1;
+}
+
+p code {
+  @apply bg-red-200;
+  @apply p-1;
+  @apply rounded-sm;
+}
+
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";

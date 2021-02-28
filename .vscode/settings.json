@@ -1,0 +1,12 @@
+{
+  // I prefer using 2 spaces instead of 4
+  "editor.tabSize": 2,
+  // Always format your code before saving
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Let's make Deno popular
+  "deno.enable": false,
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
