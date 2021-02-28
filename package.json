@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "format:fix": "prettier --write **/*.{js,jsx,ts,tsx}"
+    "format:fix": "prettier --write **/*.{js,jsx,ts,tsx}",
+    "generate-sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@tailwindcss/aspect-ratio": "0.2.0",
@@ -19,6 +20,7 @@
     "gray-matter": "4.0.2",
     "isomorphic-fetch": "3.0.0",
     "next": "10.0.7",
+    "next-seo": "4.20.0",
     "postcss": "8.2.6",
     "postcss-flexbugs-fixes": "5.0.2",
     "postcss-preset-env": "6.7.0",
