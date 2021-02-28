@@ -1,3 +1,6 @@
+import { format, parseISO } from "date-fns";
+import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import React from "react";
 
 import Footer from "../../components/Footer";
@@ -10,11 +13,35 @@ interface Props {
 }
 
 export default function Page({ post }: Props) {
+  const router = useRouter();
+  const { id } = router.query;
+
+  if (!post) {
+    return (
+      <div className="flex flex-col items-stretch min-h-screen">
+        <Header />
+        <article className="w-full mx-auto flex-grow max-w-screen-lg py-12 px-4 overflow-hidden sm:px-6 lg:px-8"></article>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-stretch min-h-screen">
+      <NextSeo
+        title={`DOF | ${post.metadata.title}`}
+        canonical={`https://dof.toniotgz.com/notas/${id}`}
+        openGraph={{
+          url: `https://dof.toniotgz.com/notas/${id}`,
+          title: `DOF | ${post.metadata.title}`,
+        }}
+      />
       <Header />
       <article className="w-full mx-auto flex-grow max-w-screen-lg py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
-        <div dangerouslySetInnerHTML={{ __html: post }} />
+        <div>
+          Fecha: {format(parseISO(post.metadata.published_at), "dd/MM/yyyy")}
+        </div>
+        <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </article>
       <Footer />
     </div>
@@ -28,7 +55,7 @@ export async function getStaticPaths() {
 
   // // Get the paths we want to pre-render based on posts
   const paths = files.map((file) => ({
-    params: { id: file.Key.replace(".php", "") },
+    params: { id: file.Key.replace(".json", "") },
   }));
 
   // We'll pre-render only these paths at build time.
