@@ -11,7 +11,7 @@ async function fetchFromSource(id: string) {
 
 async function fetchFromS3(id: string) {
   const response = await fetch(
-    `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${id}.php`,
+    `https://${process.env.SERVER_BUCKET}.s3.${process.env.SERVER_AWS_REGION}.amazonaws.com/${id}.php`,
   );
   const data = await response.text();
   if (response.status === 200) {

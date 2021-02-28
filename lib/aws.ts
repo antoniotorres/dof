@@ -2,9 +2,9 @@ import AWS from "aws-sdk";
 
 // Load S3 with env variables
 const s3 = new AWS.S3({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_ACCESS_SECRET,
+  region: process.env.SERVER_AWS_REGION,
+  accessKeyId: process.env.SERVER_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.SERVER_AWS_ACCESS_SECRET,
 });
 
 /**
@@ -15,7 +15,7 @@ const s3 = new AWS.S3({
  */
 export function uploadFile(filename: string, data: string) {
   const params = {
-    Bucket: process.env.AWS_BUCKET,
+    Bucket: process.env.SERVER_AWS_BUCKET,
     Key: filename,
     Body: data,
   };
