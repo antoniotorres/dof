@@ -45,7 +45,7 @@ async function getFiles() {
                 return `
                         <url>
                             <loc>${`https://dof.toniotgz.com/notas/${page.Key.replace(
-                              ".php",
+                              ".json",
                               "",
                             )}`}</loc>
                             <lastmod>${dateFNS.format(
