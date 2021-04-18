@@ -41,3 +41,9 @@ export function sanitizeHTML(content: string) {
   modContent = minify(modContent);
   return modContent;
 }
+
+export function removeTags(str: string) {
+  if (str === null || str === "") return "";
+  else str = str.toString();
+  return str.replace(/(<([^>]+)>)/gi, "");
+}
