@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Roboto } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/next";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -65,6 +66,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <Footer />
+        <Analytics />
       </body>
       {process.env.NODE_ENV === "production" && gaId ? (
         <GoogleAnalytics gaId={gaId} />
