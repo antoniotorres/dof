@@ -1,49 +1,72 @@
-import AWS from "aws-sdk";
+import "server-only";
 
-// Load S3 with env variables
-const s3 = new AWS.S3({
+import {
+  S3Client,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  type _Object,
+} from "@aws-sdk/client-s3";
+
+// Server-side S3 client. Credentials come from server-only env vars and are
+// never exposed to the browser (see the `server-only` import above).
+const s3 = new S3Client({
   region: process.env.SERVER_AWS_REGION,
-  accessKeyId: process.env.SERVER_AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.SERVER_AWS_ACCESS_SECRET,
+  credentials: {
+    accessKeyId: process.env.SERVER_AWS_ACCESS_KEY_ID ?? "",
+    secretAccessKey: process.env.SERVER_AWS_ACCESS_SECRET ?? "",
+  },
 });
 
+export interface NoteFile {
+  /** The note id (the S3 object key without the `.json` extension). */
+  id: string;
+  lastModified?: Date;
+}
+
 /**
- * Function to list objects inside bucket
+ * List every note stored in the bucket, normalized to `{ id, lastModified }`.
+ * In AWS SDK v3 the object `Key` is optional, so entries without one are
+ * filtered out.
  */
-async function listObjectsBucket() {
-  return new Promise<AWS.S3.ListObjectsOutput>((resolve, reject) => {
-    const params = {
+export async function getNoteFiles(): Promise<NoteFile[]> {
+  // Without S3 configuration there are no notes to list. Returning an empty
+  // list (instead of letting the AWS SDK throw) keeps `next build` working in
+  // environments where the credentials are intentionally absent.
+  if (!process.env.SERVER_AWS_REGION || !process.env.SERVER_AWS_BUCKET) {
+    // Logged at error level so a misconfigured deployment (which would ship an
+    // empty sitemap / no pre-rendered notes) is visible in production logs.
+    // Pages are still generated on demand at runtime when S3 is reachable.
+    console.error("S3 is not configured; skipping note listing.");
+    return [];
+  }
+
+  const result = await s3.send(
+    new ListObjectsV2Command({ Bucket: process.env.SERVER_AWS_BUCKET }),
+  );
+
+  return (result.Contents ?? [])
+    .filter((object): object is _Object & { Key: string } =>
+      Boolean(object.Key),
+    )
+    .map((object) => ({
+      id: object.Key.replace(".json", ""),
+      lastModified: object.LastModified,
+    }));
+}
+
+/**
+ * Store a string payload in the bucket under `filename`.
+ */
+export async function uploadFile(
+  filename: string,
+  data: string,
+): Promise<void> {
+  await s3.send(
+    new PutObjectCommand({
       Bucket: process.env.SERVER_AWS_BUCKET,
-    };
-    s3.listObjects(params, (s3Err, data) => {
-      if (s3Err) reject(s3Err);
-      resolve(data);
-    });
-  });
-}
-
-/**
- * Function to get the files inside the bucket
- */
-export async function getFiles() {
-  const list = await listObjectsBucket();
-  return list.Contents;
-}
-
-/**
- * Function to store data into S3 bucket. AWS configs and bucket will
- * be loaded from env variables
- * @param filename Name or key of the file to store in S3 bucket
- * @param data String of data to store in S3 bucket
- */
-export function uploadFile(filename: string, data: string) {
-  const params = {
-    Bucket: process.env.SERVER_AWS_BUCKET,
-    Key: filename,
-    Body: data,
-  };
-  s3.upload(params, function (s3Err, data) {
-    if (s3Err) throw s3Err;
-    console.log(`File uploaded successfully at ${data.Location}`);
-  });
+      Key: filename,
+      Body: data,
+      ContentType: "application/json",
+    }),
+  );
 }

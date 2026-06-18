@@ -1,10 +1,9 @@
 import { format } from "date-fns";
-import React from "react";
 
 export default function Footer() {
   return (
     <footer className="bg-white">
-      <div className="max-w-screen-xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
+      <div className="max-w-(--breakpoint-xl) mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
         <div className="mt-8 flex justify-center">
           <a
             href="https://github.com/antoniotorres"

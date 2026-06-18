@@ -20,7 +20,7 @@ function replaceChars(content: string) {
 }
 
 function getContent(page: string) {
-  const content = page.split("<BODY>")[1].split("</BODY>")[0];
+  const content = page.split("<BODY>")[1]?.split("</BODY>")[0] ?? "";
   return content;
 }
 

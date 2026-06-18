@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --font-sans: var(--font-roboto);
+}
+
+@layer base {
+  h1 {
+    @apply text-3xl pt-4 pb-4;
+  }
+  h2 {
+    @apply text-2xl pt-4 pb-2;
+  }
+  h3 {
+    @apply text-xl pt-4 pb-1;
+  }
+
+  p {
+    @apply py-1;
+  }
+
+  a {
+    @apply text-blue-600 underline;
+  }
+
+  ul {
+    @apply list-disc list-inside;
+  }
+
+  li {
+    @apply py-1;
+  }
+
+  p code {
+    @apply bg-red-200 p-1 rounded-xs;
+  }
+}
