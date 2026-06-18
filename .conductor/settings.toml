@@ -1,0 +1,27 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+# Diario Oficial de la Federación — Next.js 16 (App Router) site.
+# Package manager is pnpm (pnpm-lock.yaml; package.json "packageManager": "pnpm@10.10.0").
+
+# Copy gitignored secrets into every new workspace. The app reads AWS S3
+# credentials (SERVER_AWS_*) and the GA measurement id (NEXT_PUBLIC_GA_TRACKING_ID)
+# from .env.local at dev/build time (lib/aws.ts, lib/getNote.ts, app/layout.tsx),
+# so each workspace needs them to run. Mirrors Conductor's default .env* copy,
+# but is explicit for teammates. Requires a real .env.local in the repo root.
+file_include_globs = ".env*"
+
+[scripts]
+# pnpm may not be on PATH, so provision the pinned version (pnpm@10.10.0) via
+# corepack (bundled with Node). COREPACK_ENABLE_DOWNLOAD_PROMPT=0 keeps it
+# non-interactive in Conductor's non-interactive shell. Idempotent + reversible.
+setup = "corepack enable && COREPACK_ENABLE_DOWNLOAD_PROMPT=0 pnpm install"
+
+# Next.js dev server on this workspace's dedicated port so workspaces never collide.
+run = "pnpm dev --port $CONDUCTOR_PORT"
+
+# Each workspace uses its own CONDUCTOR_PORT and only touches workspace-local
+# files (S3 access is read-only), so multiple workspaces can run at the same time.
+run_mode = "concurrent"
+
+# Reclaim disk on archive by removing regenerable, gitignored build artifacts.
+archive = "rm -rf node_modules .next out"
