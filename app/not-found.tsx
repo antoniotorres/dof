@@ -2,21 +2,23 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <>
-      <h3 className="text-center text-5xl leading-6 font-light text-gray-900 mt-20">
+    <main className="mx-auto flex max-w-[600px] flex-col items-center px-7 py-32 text-center">
+      <span className="font-serif text-[64px] font-semibold leading-none tracking-[-0.02em] text-accent">
         404
-      </h3>
-      <h3 className="text-center text-lg leading-6 font-medium text-gray-800">
-        Page Not Found
-      </h3>
-      <div className="mt-5 text-center">
-        <Link
-          href="/"
-          className="uppercase no-underline inline-flex items-center justify-center px-4 py-2 border border-transparent font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-50 focus:outline-hidden focus:border-blue-300 focus:ring-2 focus:ring-blue-300 active:bg-blue-200 transition ease-in-out duration-150 sm:text-sm sm:leading-5"
-        >
-          Return to homepage
-        </Link>
-      </div>
-    </>
+      </span>
+      <h1 className="mt-4 font-serif text-[22px] font-semibold tracking-[-0.01em]">
+        Página no encontrada
+      </h1>
+      <p className="mt-2 text-[15px] text-zinc-500">
+        No encontramos la publicación que buscas. Puede que el enlace haya
+        cambiado o que el documento ya no esté disponible.
+      </p>
+      <Link
+        href="/"
+        className="mt-8 inline-flex items-center rounded-[10px] bg-accent px-5 py-[10px] text-[14px] font-semibold text-white transition hover:brightness-110"
+      >
+        Volver al inicio
+      </Link>
+    </main>
   );
 }

@@ -2,19 +2,26 @@ import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Roboto } from "next/font/google";
+import { Public_Sans, Source_Serif_4 } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const roboto = Roboto({
-  weight: ["300", "400", "500", "700", "900"],
+const publicSans = Public_Sans({
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-roboto",
+  variable: "--font-public-sans",
+});
+
+const sourceSerif = Source_Serif_4({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-source-serif",
 });
 
 const gaId = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
@@ -22,16 +29,17 @@ const gaId = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
 export const metadata: Metadata = {
   metadataBase: new URL("https://dof.toniotgz.com"),
   title: {
-    default: "Diaro Oficial de la Fedaración",
-    template: "%s | Diaro Oficial de la Fedaración",
+    default: "Diario Oficial de la Federación",
+    template: "%s | Diario Oficial de la Federación",
   },
-  description: "Diario Oficial de la Federación",
+  description:
+    "El registro oficial de México, al alcance de una búsqueda. Decretos, acuerdos, normas y resoluciones publicados por el Estado mexicano.",
   openGraph: {
     type: "website",
     locale: "es_MX",
     url: "https://dof.toniotgz.com/",
-    siteName: "Diaro Oficial de la Fedaración",
-    title: "Diaro Oficial de la Fedaración",
+    siteName: "Diario Oficial de la Federación",
+    title: "Diario Oficial de la Federación",
   },
   twitter: {
     card: "summary_large_image",
@@ -46,25 +54,34 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
     other: [
-      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#6c6c6c" },
+      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#1a4d7a" },
     ],
   },
   manifest: "/site.webmanifest",
-  other: { "msapplication-TileColor": "#ffc40d" },
+  other: { "msapplication-TileColor": "#1a4d7a" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#fdfdfc",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es" className={roboto.variable}>
-      <body className="font-sans antialiased flex flex-col items-stretch min-h-screen">
+    <html
+      lang="es"
+      className={`${publicSans.variable} ${sourceSerif.variable}`}
+    >
+      <body className="font-sans antialiased flex min-h-screen flex-col">
+        <a
+          href="#contenido"
+          className="sr-only rounded-md bg-accent px-4 py-2 text-[14px] font-semibold text-white focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-[60]"
+        >
+          Saltar al contenido
+        </a>
         <Header />
-        <main className="grow w-full max-w-(--breakpoint-lg) mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
+        <div id="contenido" className="grow">
           {children}
-        </main>
+        </div>
         <Footer />
         <Analytics />
       </body>

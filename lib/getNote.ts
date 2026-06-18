@@ -1,4 +1,4 @@
-import { formatISO, parse } from "date-fns";
+import { formatISO, isValid, parse } from "date-fns";
 
 import { uploadFile } from "./aws";
 import { sanitizeHTML } from "./sanitize";
@@ -39,13 +39,12 @@ function findMetadata(data: string) {
   );
 
   const dofMatch = data.match(/<b>DOF:(.*)<\/b>/)?.[0] ?? "";
-  const published_at = formatISO(
-    parse(
-      dofMatch.replace("<b>DOF:", "").replace("</b>", "").trim(),
-      "dd/MM/yyyy",
-      new Date(),
-    ),
-  );
+  const dateText = dofMatch.replace("<b>DOF:", "").replace("</b>", "").trim();
+  // Guard against an unexpected/malformed date: don't let formatISO throw on an
+  // Invalid Date and sink an otherwise-valid note. Downstream formatters treat
+  // an empty published_at gracefully.
+  const parsed = parse(dateText, "dd/MM/yyyy", new Date());
+  const published_at = isValid(parsed) ? formatISO(parsed) : "";
 
   return { title, published_at };
 }
