@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & discussions
+    url: https://github.com/antoniotorres/dof/discussions
+    about: Ask questions and share ideas with the community.
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/antoniotorres/dof/security/advisories/new
+    about: Please report security issues privately, not as a public issue.
+  - name: 📄 Official source (dof.gob.mx)
+    url: https://dof.gob.mx
+    about: This is an unofficial project. The authoritative gazette lives here.

@@ -1,0 +1,20 @@
+# <type>(<scope>): <subject>   — ≤50 chars, imperative ("add", not "added")
+#
+# <body> — wrap at 72 chars. Explain *what* and *why*, not *how*.
+#
+# <footer> — e.g. "Closes #123", "BREAKING CHANGE: ..."
+#
+# Conventional Commit types:
+#   feat     A new feature
+#   fix      A bug fix
+#   docs     Documentation only
+#   style    Formatting; no code-behavior change
+#   refactor Neither a fix nor a feature
+#   perf     A performance improvement
+#   test     Adding or fixing tests
+#   build    Build system or dependencies
+#   ci       CI configuration
+#   chore    Other changes that don't touch src or tests
+#
+# Enable this template once with:
+#   git config commit.template .gitmessage

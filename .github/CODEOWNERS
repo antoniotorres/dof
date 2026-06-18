@@ -1,0 +1,9 @@
+# Code owners are requested for review automatically on matching pull requests.
+# Order matters: the last matching pattern takes precedence.
+# Docs: https://docs.github.com/articles/about-code-owners
+
+# Default owner for everything in the repo.
+*       @antoniotorres
+
+# Infrastructure & repo configuration.
+/.github/   @antoniotorres

@@ -1,0 +1,27 @@
+name: Dependency Review
+
+# Blocks pull requests that introduce dependencies with known vulnerabilities.
+# Free on public repositories (uses the GitHub dependency graph).
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    name: Dependency review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Dependency review
+        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure
+          # Optional: enforce license compatibility with this MIT project.
+          # Enable once you've confirmed it doesn't flag false positives.
+          # deny-licenses: GPL-2.0, GPL-3.0, AGPL-3.0
