@@ -1,0 +1,30 @@
+# Normalize line endings: store text as LF in the repo, check out native on
+# each platform. Prevents noisy CRLF/LF diffs across macOS, Linux, and Windows.
+* text=auto eol=lf
+
+# Files that must always keep LF regardless of platform.
+*.sh        text eol=lf
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.js        text eol=lf
+*.mjs       text eol=lf
+*.json      text eol=lf
+*.css       text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+
+# Treat the lockfile as generated: collapse it in diffs and exclude it from
+# GitHub language statistics. Still tracked and reviewed, just less noisy.
+pnpm-lock.yaml  -diff linguist-generated=true
+
+# Binary assets — never try to diff or normalize these.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.svg   text eol=lf
+*.woff  binary
+*.woff2 binary

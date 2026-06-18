@@ -1,0 +1,13 @@
+# Dependencies & build output
+node_modules/
+.next/
+out/
+build/
+coverage/
+
+# Generated — never reformat (protects the lockfile from the lint-staged hook)
+pnpm-lock.yaml
+.husky/_/
+
+# Managed by release-please
+CHANGELOG.md
