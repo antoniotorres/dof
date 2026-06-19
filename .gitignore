@@ -43,3 +43,4 @@ yarn-error.log*
 # secrets / certificates (never commit these)
 *.pem
 *.key
+.env*

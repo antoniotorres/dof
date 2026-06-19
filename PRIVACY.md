@@ -8,11 +8,17 @@ recommended for production.
 ## What we collect
 
 The app has **no user accounts** and stores **no personal data** about
-visitors. It uses two privacy-conscious analytics services:
+visitors. It uses these privacy-conscious analytics services:
 
 - **Vercel Web Analytics** — aggregated, cookieless page-view metrics. No
   cross-site tracking and no personally identifiable information.
-- **Google Analytics** — loaded **only in production builds** and **only if**
+- **Umami** — self-hosted, cookieless analytics. Loaded **only on the
+  production deployment** (never on preview deployments or in development) and
+  **only if** both `NEXT_PUBLIC_UMAMI_WEBSITE_ID` and `NEXT_PUBLIC_UMAMI_SRC`
+  are configured (see [`app/layout.tsx`](app/layout.tsx)). Collects no personal
+  data and sets no cookies.
+- **Google Analytics** — loaded **only on the production deployment** (never on
+  preview deployments or in development) and **only if**
   `NEXT_PUBLIC_GA_TRACKING_ID` is configured (see
   [`app/layout.tsx`](app/layout.tsx)). Google Analytics uses cookies and
   collects usage data subject to
@@ -27,6 +33,7 @@ visitors. It uses two privacy-conscious analytics services:
 ## Third parties
 
 - **Vercel** — hosting and analytics ([privacy](https://vercel.com/legal/privacy-policy)).
+- **Umami** — self-hosted, cookieless analytics ([privacy](https://umami.is/docs/faq)).
 - **Google** — analytics, when enabled.
 - **AWS S3** — note cache storage.
 

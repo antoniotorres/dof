@@ -46,17 +46,17 @@
 
 ## Tech stack
 
-| Area            | Choice                                             |
-| --------------- | -------------------------------------------------- |
-| Framework       | [Next.js 16](https://nextjs.org) (App Router)      |
-| Language        | [TypeScript](https://www.typescriptlang.org)       |
-| UI              | [React 19](https://react.dev)                      |
-| Styling         | [Tailwind CSS v4](https://tailwindcss.com)         |
-| Storage / cache | [AWS S3](https://aws.amazon.com/s3/) (AWS SDK v3)  |
-| Package manager | [pnpm](https://pnpm.io)                            |
-| Runtime         | Node.js 24 (see [`.nvmrc`](.nvmrc))                |
-| Hosting         | [Vercel](https://vercel.com)                       |
-| Analytics       | Vercel Web Analytics + Google Analytics (optional) |
+| Area            | Choice                                                     |
+| --------------- | ---------------------------------------------------------- |
+| Framework       | [Next.js 16](https://nextjs.org) (App Router)              |
+| Language        | [TypeScript](https://www.typescriptlang.org)               |
+| UI              | [React 19](https://react.dev)                              |
+| Styling         | [Tailwind CSS v4](https://tailwindcss.com)                 |
+| Storage / cache | [AWS S3](https://aws.amazon.com/s3/) (AWS SDK v3)          |
+| Package manager | [pnpm](https://pnpm.io)                                    |
+| Runtime         | Node.js 24 (see [`.nvmrc`](.nvmrc))                        |
+| Hosting         | [Vercel](https://vercel.com)                               |
+| Analytics       | Vercel Web Analytics + Umami + Google Analytics (optional) |
 
 ## How it works
 
@@ -107,16 +107,21 @@ Copy [`.env.example`](.env.example) to `.env.local` and fill in the values you
 need. All AWS variables are **server-side only** and are never exposed to the
 browser.
 
-| Variable                     | Required | Description                                           |
-| ---------------------------- | :------: | ----------------------------------------------------- |
-| `SERVER_AWS_REGION`          |   No\*   | AWS region of the S3 bucket.                          |
-| `SERVER_AWS_BUCKET`          |   No\*   | S3 bucket name that holds the cached note JSON files. |
-| `SERVER_AWS_ACCESS_KEY_ID`   |   No\*   | IAM access key id with read/write to the bucket.      |
-| `SERVER_AWS_ACCESS_SECRET`   |   No\*   | IAM secret access key.                                |
-| `NEXT_PUBLIC_GA_TRACKING_ID` |    No    | Google Analytics measurement id (prod builds only).   |
+| Variable                       | Required | Description                                                            |
+| ------------------------------ | :------: | ---------------------------------------------------------------------- |
+| `SERVER_AWS_REGION`            |   No\*   | AWS region of the S3 bucket.                                           |
+| `SERVER_AWS_BUCKET`            |   No\*   | S3 bucket name that holds the cached note JSON files.                  |
+| `SERVER_AWS_ACCESS_KEY_ID`     |   No\*   | IAM access key id with read/write to the bucket.                       |
+| `SERVER_AWS_ACCESS_SECRET`     |   No\*   | IAM secret access key.                                                 |
+| `NEXT_PUBLIC_GA_TRACKING_ID`   |    No    | Google Analytics measurement id (production deploy only, not preview). |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` |  No\*\*  | Umami website id (production deploy only, not preview).                |
+| `NEXT_PUBLIC_UMAMI_SRC`        |  No\*\*  | Umami tracker script URL (production deploy only, not preview).        |
 
 > \* Without S3 the app builds and runs with an empty note listing. Configure
 > all four AWS variables together to enable the cache.
+
+> \*\* Umami loads only when **both** `NEXT_PUBLIC_UMAMI_WEBSITE_ID` and
+> `NEXT_PUBLIC_UMAMI_SRC` are set. Leave either blank to disable.
 
 > [!WARNING]
 > Never commit real credentials. `.env*` files are git-ignored; only
