@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { Public_Sans, Source_Serif_4 } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -24,7 +25,18 @@ const sourceSerif = Source_Serif_4({
   variable: "--font-source-serif",
 });
 
+// Analytics must run ONLY on the production deployment. On Vercel, NODE_ENV is
+// "production" for BOTH production AND preview builds, so it cannot distinguish
+// the two. VERCEL_ENV ("production" | "preview" | "development") is the reliable
+// signal; it is undefined locally, so `next dev` and local builds never track.
+const isProductionDeployment = process.env.VERCEL_ENV === "production";
+
 const gaId = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+
+// Umami — privacy-friendly, cookieless analytics. Loaded only on the production
+// deployment and only when both the website id and script src are configured.
+const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+const umamiSrc = process.env.NEXT_PUBLIC_UMAMI_SRC;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dof.toniotgz.com"),
@@ -84,10 +96,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </div>
         <Footer />
         <Analytics />
+        {isProductionDeployment && umamiWebsiteId && umamiSrc ? (
+          <Script
+            defer
+            src={umamiSrc}
+            data-website-id={umamiWebsiteId}
+            strategy="afterInteractive"
+          />
+        ) : null}
       </body>
-      {process.env.NODE_ENV === "production" && gaId ? (
-        <GoogleAnalytics gaId={gaId} />
-      ) : null}
+      {isProductionDeployment && gaId ? <GoogleAnalytics gaId={gaId} /> : null}
     </html>
   );
 }
