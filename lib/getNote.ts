@@ -1,20 +1,7 @@
-import { formatISO, isValid, parse } from "date-fns";
-
 import { uploadFile } from "./r2";
-import { sanitizeHTML } from "./sanitize";
+import { fetchFromSource, noteFromSource, type Note } from "./dofSource";
 
-export interface Note {
-  metadata: { title: string; published_at: string };
-  content: string;
-}
-
-async function fetchFromSource(id: string) {
-  const response = await fetch(
-    `https://dof.gob.mx/nota_detalle.php?codigo=${id}`,
-  );
-  const data = await response.text();
-  return data;
-}
+export type { Note } from "./dofSource";
 
 async function fetchFromR2(id: string) {
   if (!process.env.R2_PUBLIC_URL) {
@@ -26,25 +13,6 @@ async function fetchFromR2(id: string) {
     return data;
   }
   throw new Error(data);
-}
-
-function findMetadata(data: string) {
-  const detail =
-    data.split("<div id='DivDetalleNota' align='justify'")[1] ?? data;
-  const titleMatch = detail.match(/<title>(.*)<\/title>/)?.[0] ?? "";
-  const title = unescape(
-    titleMatch.replace("<title>", "").replace("</title>", ""),
-  );
-
-  const dofMatch = data.match(/<b>DOF:(.*)<\/b>/)?.[0] ?? "";
-  const dateText = dofMatch.replace("<b>DOF:", "").replace("</b>", "").trim();
-  // Guard against an unexpected/malformed date: don't let formatISO throw on an
-  // Invalid Date and sink an otherwise-valid note. Downstream formatters treat
-  // an empty published_at gracefully.
-  const parsed = parse(dateText, "dd/MM/yyyy", new Date());
-  const published_at = isValid(parsed) ? formatISO(parsed) : "";
-
-  return { title, published_at };
 }
 
 /**
@@ -67,9 +35,7 @@ export async function getNote(id: string): Promise<Note> {
   // Download file from original DOF page
   console.log("Not Found in R2 ... Fallback to DOF");
   const source = await fetchFromSource(id);
-  const metadata = findMetadata(source);
-  const content = sanitizeHTML(source);
-  const file: Note = { metadata, content };
+  const file = noteFromSource(source);
 
   // Cache back to R2, but never let a write failure break the read path: the
   // note was already fetched successfully, so we always return it.
