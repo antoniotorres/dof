@@ -1,5 +1,6 @@
 import { uploadFile } from "./r2";
-import { fetchFromSource, noteFromSource, type Note } from "./dofSource";
+import { dofFetchText } from "./dofCA";
+import { buildSourceUrl, noteFromSource, type Note } from "./dofSource";
 
 export type { Note } from "./dofSource";
 
@@ -34,7 +35,7 @@ export async function getNote(id: string): Promise<Note> {
 
   // Download file from original DOF page
   console.log("Not Found in R2 ... Fallback to DOF");
-  const source = await fetchFromSource(id);
+  const source = await dofFetchText(buildSourceUrl(id));
   const file = noteFromSource(source);
 
   // Cache back to R2, but never let a write failure break the read path: the

@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ingest": "NODE_EXTRA_CA_CERTS=scripts/dof-godaddy-g2-intermediate.pem tsx scripts/ingest.ts",
+    "ingest": "tsx scripts/ingest.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,css,md}\"",
@@ -34,7 +34,8 @@
     "next": "16.2.9",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "server-only": "0.0.1"
+    "server-only": "0.0.1",
+    "undici": "8.5.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "0.5.11",

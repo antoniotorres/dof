@@ -32,6 +32,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 
+import { dofFetchText } from "../lib/dofCA";
 import {
   buildSourceUrl,
   decodeEntities,
@@ -153,38 +154,8 @@ function toDofDate(iso: string): string {
 }
 
 // --- Fetch helpers ---------------------------------------------------------
-
-const USER_AGENT =
-  "dof-reader/0.1 (+https://dof.toniotgz.com; unofficial DOF reader)";
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function fetchText(
-  url: string,
-  { retries = 2, timeoutMs = 30_000 } = {},
-): Promise<string> {
-  let lastError: unknown;
-  for (let attempt = 0; attempt <= retries; attempt++) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const response = await fetch(url, {
-        signal: controller.signal,
-        headers: { "User-Agent": USER_AGENT },
-      });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return await response.text();
-    } catch (error) {
-      lastError = error;
-      if (attempt < retries) await sleep(500 * (attempt + 1));
-    } finally {
-      clearTimeout(timer);
-    }
-  }
-  throw lastError;
-}
+// HTTP to dof.gob.mx (with the TLS-chain workaround, retries and timeout) lives
+// in lib/dofCA.ts (`dofFetchText`), shared with the app read-path.
 
 /** Run `fn` over `items` with at most `limit` in flight, preserving order. */
 async function mapLimit<T, R>(
@@ -261,7 +232,7 @@ async function collectEntries(
   for (const edition of editions) {
     let html: string;
     try {
-      html = await fetchText(indexUrl(iso, edition));
+      html = await dofFetchText(indexUrl(iso, edition));
     } catch (error) {
       noteIfTlsChainError(error);
       console.error(
@@ -445,7 +416,9 @@ async function main(): Promise<void> {
       }
 
       try {
-        const html = await fetchText(buildSourceUrl(entry.codigo, entry.fecha));
+        const html = await dofFetchText(
+          buildSourceUrl(entry.codigo, entry.fecha),
+        );
         const note = noteFromSource(html);
         plan.title = note.metadata.title || entry.indexTitle;
         plan.publishedAt = note.metadata.published_at;

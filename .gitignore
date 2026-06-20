@@ -44,6 +44,3 @@ yarn-error.log*
 *.pem
 *.key
 .env*
-# Exception: a PUBLIC CA intermediate (no private-key material). Required by
-# `pnpm ingest` to complete dof.gob.mx's incomplete TLS chain. Safe to commit.
-!scripts/dof-godaddy-g2-intermediate.pem
