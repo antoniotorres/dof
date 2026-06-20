@@ -22,7 +22,7 @@ export interface Note {
  *  document title. */
 const GENERIC_TITLE = "DOF - Diario Oficial de la Federación";
 
-const USER_AGENT =
+export const USER_AGENT =
   "dof-reader/0.1 (+https://dof.toniotgz.com; unofficial DOF reader)";
 
 /** Build the canonical upstream URL for a nota. `fecha` (DD/MM/YYYY) is
@@ -31,16 +31,6 @@ const USER_AGENT =
 export function buildSourceUrl(id: string, fecha?: string): string {
   const base = `https://dof.gob.mx/nota_detalle.php?codigo=${id}`;
   return fecha ? `${base}&fecha=${encodeURIComponent(fecha)}` : base;
-}
-
-export async function fetchFromSource(
-  id: string,
-  fecha?: string,
-): Promise<string> {
-  const response = await fetch(buildSourceUrl(id, fecha), {
-    headers: { "User-Agent": USER_AGENT },
-  });
-  return response.text();
 }
 
 const NAMED_ENTITIES: Record<string, string> = {
