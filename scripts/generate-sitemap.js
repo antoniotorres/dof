@@ -2,30 +2,26 @@ require("isomorphic-fetch");
 const fs = require("fs");
 const prettier = require("prettier");
 const dateFNS = require("date-fns");
-const AWS = require("aws-sdk");
+const {
+  S3Client,
+  ListObjectsV2Command,
+} = require("@aws-sdk/client-s3");
 
-// Load S3 with env variables
-const s3 = new AWS.S3({
-  region: process.env.SERVER_AWS_REGION,
-  accessKeyId: process.env.SERVER_AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.SERVER_AWS_ACCESS_SECRET,
+// R2 is S3-compatible; credentials and endpoint come from env vars.
+const r2 = new S3Client({
+  region: "auto",
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+  },
 });
 
-async function listObjectsBucket() {
-  return new Promise((resolve, reject) => {
-    const params = {
-      Bucket: process.env.SERVER_AWS_BUCKET,
-    };
-    s3.listObjects(params, (s3Err, data) => {
-      if (s3Err) reject(s3Err);
-      resolve(data);
-    });
-  });
-}
-
 async function getFiles() {
-  const list = await listObjectsBucket();
-  return list.Contents;
+  const output = await r2.send(
+    new ListObjectsV2Command({ Bucket: process.env.R2_BUCKET }),
+  );
+  return output.Contents;
 }
 
 (async () => {
