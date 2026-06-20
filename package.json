@@ -10,6 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "ingest": "NODE_EXTRA_CA_CERTS=scripts/dof-godaddy-g2-intermediate.pem tsx scripts/ingest.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,css,md}\"",
@@ -49,6 +50,7 @@
     "postcss": "8.5.15",
     "prettier": "3.8.4",
     "tailwindcss": "4.3.1",
+    "tsx": "4.22.4",
     "typescript": "6.0.3"
   },
   "pnpm": {
