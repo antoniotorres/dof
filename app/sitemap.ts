@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { getNoteFiles } from "@/lib/aws";
+import { getNoteFiles } from "@/lib/r2";
 
 const BASE_URL = "https://dof.toniotgz.com";
 
