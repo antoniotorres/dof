@@ -61,6 +61,12 @@ export async function getNote(id: string) {
   const metadata = findMetadata(source);
   const content = sanitizeHTML(source);
   const file = { metadata, content };
-  uploadFile(filename, JSON.stringify(file));
+  // Await the cache write so it completes before the serverless function
+  // freezes; a failed write shouldn't crash the request.
+  try {
+    await uploadFile(filename, JSON.stringify(file));
+  } catch (e) {
+    console.error(e);
+  }
   return file;
 }
