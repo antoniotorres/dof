@@ -1,6 +1,6 @@
 import { formatISO, isValid, parse } from "date-fns";
 
-import { uploadFile } from "./aws";
+import { uploadFile } from "./r2";
 import { sanitizeHTML } from "./sanitize";
 
 export interface Note {
@@ -16,13 +16,11 @@ async function fetchFromSource(id: string) {
   return data;
 }
 
-async function fetchFromS3(id: string) {
-  if (!process.env.SERVER_AWS_BUCKET || !process.env.SERVER_AWS_REGION) {
-    throw new Error("S3 is not configured");
+async function fetchFromR2(id: string) {
+  if (!process.env.R2_PUBLIC_URL) {
+    throw new Error("R2 is not configured");
   }
-  const response = await fetch(
-    `https://${process.env.SERVER_AWS_BUCKET}.s3.${process.env.SERVER_AWS_REGION}.amazonaws.com/${id}.json`,
-  );
+  const response = await fetch(`${process.env.R2_PUBLIC_URL}/${id}.json`);
   const data = await response.text();
   if (response.status === 200) {
     return data;
@@ -50,35 +48,35 @@ function findMetadata(data: string) {
 }
 
 /**
- * Fetch a note by id. Tries the S3 cache first; on a miss it downloads the
- * original DOF page, sanitizes it, caches it back to S3, and returns it.
+ * Fetch a note by id. Tries the R2 cache first; on a miss it downloads the
+ * original DOF page, sanitizes it, caches it back to R2, and returns it.
  */
 export async function getNote(id: string): Promise<Note> {
   const filename = `${id}.json`;
 
   try {
-    const s3File = await fetchFromS3(id);
-    console.log("File Found in S3 ... OK");
-    if (s3File) {
-      return JSON.parse(s3File) as Note;
+    const r2File = await fetchFromR2(id);
+    console.log("File Found in R2 ... OK");
+    if (r2File) {
+      return JSON.parse(r2File) as Note;
     }
   } catch (error) {
     console.error(error);
   }
 
   // Download file from original DOF page
-  console.log("Not Found in S3 ... Fallback to DOF");
+  console.log("Not Found in R2 ... Fallback to DOF");
   const source = await fetchFromSource(id);
   const metadata = findMetadata(source);
   const content = sanitizeHTML(source);
   const file: Note = { metadata, content };
 
-  // Cache back to S3, but never let a write failure break the read path: the
+  // Cache back to R2, but never let a write failure break the read path: the
   // note was already fetched successfully, so we always return it.
   try {
     await uploadFile(filename, JSON.stringify(file));
   } catch (error) {
-    console.error("S3 cache write failed", error);
+    console.error("R2 cache write failed", error);
   }
   return file;
 }

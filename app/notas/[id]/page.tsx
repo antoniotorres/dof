@@ -5,7 +5,7 @@ import { es } from "date-fns/locale";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getNoteFiles } from "@/lib/aws";
+import { getNoteFiles } from "@/lib/r2";
 import { getNote, type Note } from "@/lib/getNote";
 import { getSampleNote } from "@/lib/sampleDocs";
 import { deriveTipo } from "@/lib/recentNotes";
@@ -174,7 +174,9 @@ export default async function NotePage({
                 </dd>
               </div>
               <div>
-                <dt className="mb-[2px] text-[12px] text-zinc-400">Folio DOF</dt>
+                <dt className="mb-[2px] text-[12px] text-zinc-400">
+                  Folio DOF
+                </dt>
                 <dd className="text-[14px] font-medium tabular-nums text-zinc-800">
                   {id}
                 </dd>

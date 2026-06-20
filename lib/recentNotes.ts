@@ -3,7 +3,7 @@ import "server-only";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 
-import { getNoteFiles } from "./aws";
+import { getNoteFiles } from "./r2";
 import { getNote, type Note } from "./getNote";
 import { SAMPLE_DOCS, type DocCard } from "./sampleDocs";
 

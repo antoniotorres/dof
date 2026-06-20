@@ -1,0 +1,7 @@
+name = "dof"
+
+# R2 bucket binding. No secrets here — account ID and credentials are
+# provided via environment variables at runtime (see .env.example).
+[[r2_buckets]]
+binding = "NOTAS"
+bucket_name = "dof-notas"
