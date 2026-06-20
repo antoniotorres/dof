@@ -1,5 +1,5 @@
 import { formatISO, parse } from "date-fns";
-import { uploadFile } from "./aws";
+import { uploadFile } from "./r2";
 import { sanitizeHTML } from "./sanitize";
 
 async function fetchFromSource(id: string) {
@@ -10,10 +10,8 @@ async function fetchFromSource(id: string) {
   return data;
 }
 
-async function fetchFromS3(id: string) {
-  const response = await fetch(
-    `https://${process.env.SERVER_AWS_BUCKET}.s3.${process.env.SERVER_AWS_REGION}.amazonaws.com/${id}.json`,
-  );
+async function fetchFromR2(id: string) {
+  const response = await fetch(`${process.env.R2_PUBLIC_URL}/${id}.json`);
   const data = await response.text();
   if (response.status === 200) {
     return data;
@@ -48,17 +46,17 @@ export async function getNote(id: string) {
   const filename = `${id}.json`;
 
   try {
-    const s3File = await fetchFromS3(id);
-    console.log("File Found in S3 ... OK");
-    if (s3File) {
-      return JSON.parse(s3File);
+    const r2File = await fetchFromR2(id);
+    console.log("File Found in R2 ... OK");
+    if (r2File) {
+      return JSON.parse(r2File);
     }
   } catch (e) {
     console.error(e);
   }
 
   // Download file from original DOF page
-  console.log("Not Found in S3 ... Fallback to DOF");
+  console.log("Not Found in R2 ... Fallback to DOF");
   const source = await fetchFromSource(id);
   const metadata = findMetadata(source);
   const content = sanitizeHTML(source);

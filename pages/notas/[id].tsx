@@ -5,7 +5,7 @@ import React from "react";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { getFiles } from "../../lib/aws";
+import { getFiles } from "../../lib/r2";
 import { getNote } from "../../lib/getNote";
 import { removeTags } from "../../lib/sanitize";
 
