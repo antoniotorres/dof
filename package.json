@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "0.5.11",
-    "@tailwindcss/postcss": "4.3.1",
+    "@tailwindcss/postcss": "4.3.2",
     "@tailwindcss/typography": "0.5.20",
     "@types/node": "22.19.21",
     "@types/react": "19.2.17",
@@ -47,10 +47,10 @@
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.9",
     "husky": "9.1.7",
-    "lint-staged": "17.0.7",
-    "postcss": "8.5.15",
-    "prettier": "3.8.4",
-    "tailwindcss": "4.3.1",
+    "lint-staged": "17.0.8",
+    "postcss": "8.5.16",
+    "prettier": "3.9.3",
+    "tailwindcss": "4.3.2",
     "tsx": "4.22.4",
     "typescript": "6.0.3"
   },
