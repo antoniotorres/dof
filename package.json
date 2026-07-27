@@ -27,15 +27,15 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.1072.0",
-    "@next/third-parties": "16.2.9",
+    "@aws-sdk/client-s3": "3.1096.0",
+    "@next/third-parties": "16.2.12",
     "@vercel/analytics": "2.0.1",
     "date-fns": "4.4.0",
-    "next": "16.2.9",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
+    "next": "16.2.12",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "server-only": "0.0.1",
-    "undici": "8.5.0"
+    "undici": "8.9.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "0.5.11",
